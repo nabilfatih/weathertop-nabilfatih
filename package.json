@@ -1,0 +1,22 @@
+{
+  "name": "web-app-template",
+  "version": "0.0.1",
+  "description": "A template for a web app using Node.js, Express and Handlebars",
+  "main": "app.js",
+  "scripts": {},
+  "dependencies": {
+    "dotenv": "^10.0.0",
+    "ejs": "^3.1.8",
+    "express": "^4.18.1",
+    "express-handlebars": "^6.0.6",
+    "winston": "^3.7.2"
+  },
+  "repository": {
+    "url": "https://github.com/OTHRegensburgWebDevKIDS/web-app-template-1"
+  },
+  "license": "MIT",
+  "keywords": [
+    "node",
+    "express"
+  ]
+}
