@@ -1,44 +1,44 @@
 <% layout('layouts/boilerplate') %>
+    <%- include('./partials/flash') %>
 
+        <h2>
+            Register
+        </h2>
 
-    <h2>
-        Register
-    </h2>
+        <div class="tab-content container-fluid d-flex justify-content-center">
 
-    <div class="tab-content container-fluid d-flex justify-content-center">
+            <form action="/register" method="POST">
 
-        <form action="/register" method="POST">
+                <div class="form-outline mb-4">
+                    <input type="text" id="name" class="form-control" required />
+                    <label class="form-label" for="name">Name</label>
+                </div>
 
-            <div class="form-outline mb-4">
-                <input type="text" id="registerName" class="form-control" required />
-                <label class="form-label" for="registerName">Name</label>
-            </div>
+                <div class="form-outline mb-4">
+                    <input type="text" id="username" class="form-control" required />
+                    <label class="form-label" for="username">Username</label>
+                </div>
 
-            <div class="form-outline mb-4">
-                <input type="text" id="registerUsername" class="form-control" required />
-                <label class="form-label" for="registerUsername">Username</label>
-            </div>
+                <div class="form-outline mb-4">
+                    <input type="email" id="email" class="form-control" required />
+                    <label class="form-label" for="email">Email</label>
+                </div>
 
-            <div class="form-outline mb-4">
-                <input type="email" id="registerEmail" class="form-control" required />
-                <label class="form-label" for="registerEmail">Email</label>
-            </div>
+                <div class="form-outline mb-4">
+                    <input type="password" id="password" class="form-control" required />
+                    <label class="form-label" for="password" aria-required="true">Password</label>
+                </div>
 
-            <div class="form-outline mb-4">
-                <input type="password" id="registerPassword" class="form-control" required />
-                <label class="form-label" for="registerPassword" aria-required="true">Password</label>
-            </div>
+                <div class="form-outline mb-4">
+                    <input type="password" id="confirmPassword" class="form-control" required />
+                    <label class="form-label" for="confirmPassword">Confirm password</label>
+                </div>
 
-            <div class="form-outline mb-4">
-                <input type="password" id="registerConfirmPassword" class="form-control" required />
-                <label class="form-label" for="registerConfirmPassword">Confirm password</label>
-            </div>
+                <button type="submit" class="btn btn-primary btn-block mb-3">Register</button>
 
-            <button type="submit" class="btn btn-primary btn-block mb-3">Register</button>
+                <div class="text-center">
+                    <p>Have account? <a href="login">Login</a></p>
+                </div>
+            </form>
 
-            <div class="text-center">
-                <p>Have account? <a href="login">Login</a></p>
-            </div>
-        </form>
-
-    </div>
+        </div>

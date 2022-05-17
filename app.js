@@ -17,6 +17,7 @@ const ExpressError = require("./utils/ExpressError");
 const userRoutes = require("./routes/users");
 const homeRoutes = require("./routes/home");
 const dashboardRoutes = require("./routes/dashboard");
+const { isLoggedOut } = require("./middleware");
 
 const app = express();
 
@@ -49,6 +50,66 @@ app.use(flash());
 app.use(passport.initialize());
 app.use(passport.session());
 
+passport.use(
+  "local",
+  new LocalStrategy(
+    { passReqToCallback: true },
+    (req, username, password, done) => {
+      loginAttempt();
+      async function loginAttempt() {
+        const client = await pool.connect();
+        try {
+          await client.query("BEGIN");
+          var currentAccountsData = await JSON.stringify(
+            client.query(
+              "SELECT id, name, username, email, password FROM users WHERE username=$1",
+              [username],
+              function (err, result) {
+                if (err) {
+                  return done(err);
+                }
+                if (result.rows[0] == null) {
+                  req.flash("error", "User not found!");
+                  return done(null, false);
+                } else {
+                  bcrypt.compare(
+                    password,
+                    result.rows[0].password,
+                    function (err, check) {
+                      if (err) {
+                        req.flash("error", "Wrong password");
+                        return done();
+                      } else if (check) {
+                        return done(null, [
+                          {
+                            email: result.rows[0].email,
+                            username: result.rows[0].username,
+                          },
+                        ]);
+                      } else {
+                        req.flash("error", "Incorrect login details");
+                        return done(null, false);
+                      }
+                    }
+                  );
+                }
+              }
+            )
+          );
+        } catch (e) {
+          throw e;
+        }
+      }
+    }
+  )
+);
+passport.serializeUser(function (user, done) {
+  done(null, user);
+});
+passport.deserializeUser(function (user, done) {
+  done(null, user);
+});
+
 app.use((req, res, next) => {
   console.log(req.session);
   res.locals.currentUser = req.user;
@@ -61,10 +122,10 @@ app.use("/", userRoutes);
 app.use("/dashboard", dashboardRoutes);
 app.use("/home", homeRoutes);
 
-app.get("/", (req, res) => {
+app.get("/", isLoggedOut, (req, res) => {
   res.render("index", {
     title: "Weathertop",
-    header: "Welcome to Weathertop!"
+    header: "Welcome to Weathertop!",
   });
 });
 
