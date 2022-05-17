@@ -20,7 +20,7 @@ router.post(
   passport.authenticate("local", {
     successRedirect: "/dashboard",
     failureRedirect: "/login",
-    failureFlash: "Wrong username or password!",
+    failureFlash: true,
   }),
   function (req, res) {
     req.flash("success", "Welcome to Weathertop!");

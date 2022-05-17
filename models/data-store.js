@@ -21,12 +21,12 @@ if (conString == undefined) {
 let dbClient = null;
 
 const dataStore = {
-  getDataStore() {
+  async getDataStore() {
     if (dbClient !== null) {
       return dbClient;
     } else {
       dbClient = new pg.Client(dbConfig);
-      dbClient.connect();
+      await dbClient.connect();
       return dbClient;
     }
   },
