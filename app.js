@@ -14,6 +14,10 @@ const LocalStrategy = require("passport-local");
 const logger = require("./utils/logger");
 const ExpressError = require("./utils/ExpressError");
 
+const userRoutes = require("./routes/users");
+const homeRoutes = require("./routes/home");
+const dashboardRoutes = require("./routes/dashboard");
+
 const app = express();
 
 app.engine("ejs", ejsMate);
@@ -53,11 +57,18 @@ app.use((req, res, next) => {
   next();
 });
 
-const routes = require("./routes");
-app.use("/", routes);
+app.use("/", userRoutes);
+app.use("/dashboard", dashboardRoutes);
+app.use("/home", homeRoutes);
+
+app.get("/", (req, res) => {
+  res.render("index", {
+    title: "Weathertop",
+  });
+});
 
 app.all("*", (req, res, next) => {
-  next(new ExpressError("Halaman Tidak Ditemukan :(", 404));
+  next(new ExpressError("Page not found :(", 404));
 });
 
 app.use((err, req, res, next) => {

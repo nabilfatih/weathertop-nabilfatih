@@ -4,10 +4,10 @@ const dashboard = {
   index(request, response) {
     logger.info("dashboard rendering");
     const viewData = {
-      title: "Dashboard Web app template"
+      title: "Dashboard",
     };
     response.render("dashboard", viewData);
-  }
+  },
 };
 
 module.exports = dashboard;
