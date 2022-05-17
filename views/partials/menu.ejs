@@ -15,9 +15,13 @@
                             <li class="nav-item d-flex">
                                 <% if(currentUser) {%>
                                     <a class="nav-link" id="dashboard" href="/dashboard">Dashboard</a>
+                                    <span class="nav-link" id="username">
+                                        <%= user.username %>
+                                    </span>
+                                    <a class="nav-link" id="logout" href="/logout">Logout</a>
                                     <% } else {%>
                                         <a class="nav-link" id="dashboard" href="/login">Login</a>
-                                        <a class="nav-link" id="dashboard" href="/register">Register</a>
+                                        <a class="nav-link" id="register" href="/register">Register</a>
                                         <% } %>
                             </li>
                         </ul>

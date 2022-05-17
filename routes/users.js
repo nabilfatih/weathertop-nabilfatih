@@ -50,32 +50,35 @@ router.post(
 
     try {
       const client = await dataStore.getDataStore();
-      await client.query(
-        "SELECT * FROM users WHERE username=$1",
-        [username],
-        async function (err, result) {
-          const pwd = await bcrypt.hash(password, 10);
-          if (result.rows[0]) {
-            req.flash("error", "This email address is already registered");
-            res.redirect("/register");
-          } else {
-            await client.query(
-              "INSERT INTO users (id, name, username, email, password) VALUES ($1, $2, $3, $4, $5)",
-              [uuid(), name, username, email, pwd],
-              function (err, result) {
-                if (err) {
-                  console.log(err);
-                } else {
-                  client.query("COMMIT");
-                  console.log(result);
-                  req.flash("success", "User created");
-                  res.redirect("/login");
-                  return;
+      JSON.stringify(
+        await client.query(
+          "SELECT * FROM users WHERE username=$1",
+          [username],
+          async function (err, result) {
+            const pwd = await bcrypt.hash(password, 10);
+            if (result.rows[0]) {
+              req.flash("error", "This email address is already registered");
+              res.redirect("/register");
+            } else {
+              await client.query(
+                "INSERT INTO users (id, name, username, email, password) VALUES ($1, $2, $3, $4, $5)",
+                [uuid(), name, username, email, pwd],
+                function (err, result) {
+                  if (err) {
+                    req.flash("error", "Error created the account!");
+                    res.redirect("/register");
+                    return;
+                  } else {
+                    client.query("COMMIT");
+                    req.flash("success", "User created");
+                    res.redirect("/login");
+                    return;
+                  }
                 }
-              }
-            );
+              );
+            }
           }
-        }
+        )
       );
     } catch (err) {
       throw err;
@@ -83,10 +86,10 @@ router.post(
   })
 );
 
-router.get("/signout", (req, res) => {
+router.get("/logout", (req, res) => {
   req.logout();
   req.flash("success", "Goodbye!");
-  res.redirect("login");
+  res.redirect("/login");
 });
 
 module.exports = router;
