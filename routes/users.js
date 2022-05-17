@@ -15,10 +15,28 @@ const pool = new Pool({
   ssl: true,
 });
 
-router.get("/login");
-router.post("/login");
-router.get("/signup");
-router.post("/signup");
-router.get("/signout");
+router.get("/login", (req, res) => {
+  res.render("login", {
+    title: "Login | Weathertop",
+    user: req.user,
+  });
+});
+
+// router.post("/login");
+
+router.get("/register", (req, res) => {
+  res.render("register", {
+    title: "Register | Weathertop",
+    user: req.user,
+  });
+});
+
+// router.post("/register");
+
+router.get("/signout", (req, res) => {
+  req.logout();
+  req.flash("success", "Goodbye!");
+  res.redirect("login");
+});
 
 module.exports = router;

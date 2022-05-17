@@ -64,6 +64,7 @@ app.use("/home", homeRoutes);
 app.get("/", (req, res) => {
   res.render("index", {
     title: "Weathertop",
+    header: "Welcome to Weathertop!"
   });
 });
 
