@@ -2,9 +2,9 @@ const logger = require("../utils/logger.js");
 
 const home = {
   index(request, response) {
-    logger.info("home rendering");
+    logger.info("Home rendering");
     const viewData = {
-      title: "Welcome to the Web app template!"
+      title: "Welcome to the Weathertop"
     };
     response.render("index", viewData);
   },
