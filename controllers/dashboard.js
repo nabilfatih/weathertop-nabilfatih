@@ -1,14 +1,14 @@
 const logger = require("../utils/logger.js");
 
 const dashboard = {
-  index(request, response) {
+  index(req, res) {
     logger.info("dashboard rendering");
 
     const viewData = {
       title: "Dashboard",
-      user: request.user,
+      user: req.user,
     };
-    response.render("dashboard", viewData);
+    res.render("dashboard", viewData);
   },
 };
 

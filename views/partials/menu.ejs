@@ -18,7 +18,10 @@
                                     <span class="nav-link" id="username">
                                         <%= user.username %>
                                     </span>
-                                    <a class="nav-link" id="logout" href="/logout">Logout</a>
+                                    <button type="button" class="btn btn-dark btn-block submit-btn">
+                                        <a id=" logout" href="/logout" style="color: white;">Logout</a>
+                                    </button>
+
                                     <% } else {%>
                                         <a class="nav-link" id="dashboard" href="/login">Login</a>
                                         <a class="nav-link" id="register" href="/register">Register</a>

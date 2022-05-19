@@ -1,12 +1,12 @@
 const logger = require("../utils/logger.js");
 
 const home = {
-  index(request, response) {
+  index(req, res) {
     logger.info("Home rendering");
     const viewData = {
-      title: "Welcome to the Weathertop!"
+      title: "Welcome to the Weathertop!",
     };
-    response.render("index", viewData);
+    res.render("index", viewData);
   },
 };
 
