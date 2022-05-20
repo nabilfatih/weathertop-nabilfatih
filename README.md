@@ -1,4 +1,5 @@
-# web-app-template-1
+# Weathertop
+## By Nabil Fatih
 
 A starter project for a web application.
 
