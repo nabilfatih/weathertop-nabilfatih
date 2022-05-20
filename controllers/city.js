@@ -5,7 +5,7 @@ const city = {
     logger.info("city rendering");
 
     const viewData = {
-      title: "city",
+      title: "City",
       user: req.user,
     };
     res.render("city", viewData);

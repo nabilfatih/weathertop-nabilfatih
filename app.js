@@ -17,6 +17,7 @@ const ExpressError = require("./utils/ExpressError");
 const userRoutes = require("./routes/users");
 const homeRoutes = require("./routes/home");
 const dashboardRoutes = require("./routes/dashboard");
+const cityRoutes = require("./routes/city");
 const { isLoggedOut } = require("./middleware");
 const dataStore = require("./models/data-store");
 
@@ -86,6 +87,7 @@ passport.use(
                         return done();
                       } else if (check) {
                         return done(null, {
+                          userId: result.rows[0].id,
                           email: result.rows[0].email,
                           username: result.rows[0].username,
                         });
@@ -114,6 +116,7 @@ passport.deserializeUser(function (user, done) {
 });
 
 app.use((req, res, next) => {
+  console.log(req.session);
   res.locals.currentUser = req.user;
   res.locals.success = req.flash("success");
   res.locals.error = req.flash("error");
@@ -123,6 +126,7 @@ app.use((req, res, next) => {
 app.use("/", userRoutes);
 app.use("/dashboard", dashboardRoutes);
 app.use("/home", homeRoutes);
+app.use("/city", cityRoutes);
 
 app.get("/", isLoggedOut, (req, res) => {
   res.render("index", {

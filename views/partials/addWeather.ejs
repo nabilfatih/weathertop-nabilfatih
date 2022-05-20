@@ -1,17 +1,28 @@
-<form action="/weather/add" method="POST" class="mt-5">
-    <div class="row">
-        <div class="form-group col-xs-4 col-md-4">
-            <label htmlFor="city" class="control-label">City</label>
-            <input placeholder="City" type="text" class="form-control" id="city" name="city" required>
+<form action="/city" method="POST" class="mt-5">
+    <div class="d-flex justify-content-between align-items-center">
+        <div class="form-group">
+            <label htmlFor="code" class="control-label">Code</label>
+            <input placeholder="Code" type="number" class="form-control" id="code" name="code" required>
         </div>
-        <div class="form-group col-xs-4 col-md-4">
-            <label htmlFor="latitude" class="control-label">Latitude</label>
-            <input placeholder="Latitude" type="number" class="form-control" id="latitude" name="latitude" required>
+        <div class="form-group">
+            <label htmlFor="temperature" class="control-label">Temperature</label>
+            <input placeholder="temperature" type="number" class="form-control" id="temperature" name="temperature"
+                required>
         </div>
-        <div class="form-group col-xs-4 col-md-4">
-            <label htmlFor="longitude" class="control-label">Longitude</label>
-            <input placeholder="Longitude" type="number" class="form-control" id="longitude" name="longitude" required>
+        <div class="form-group">
+            <label htmlFor="windSpeed" class="control-label">Wind Speed</label>
+            <input placeholder="Wind Speed" type="number" class="form-control" id="windSpeed" name="windSpeed" required>
+        </div>
+        <div class="form-group">
+            <label htmlFor="windDirection" class="control-label">Wind Direction</label>
+            <input placeholder="Wind Direction" type="number" class="form-control" id="windDirection"
+                name="windDirection" required>
+        </div>
+        <div class="form-group">
+            <label htmlFor="airPressure" class="control-label">Air Pressure</label>
+            <input placeholder="airPressure" type="number" class="form-control" id="airPressure" name="airPressure"
+                required>
         </div>
     </div>
-    <button type="submit" class="btn btn-primary mt-2">Add City</button>
+    <button type="submit" class="btn btn-primary mt-3">Add Measurement</button>
 </form>

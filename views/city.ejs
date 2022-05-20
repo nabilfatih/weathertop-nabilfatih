@@ -1,0 +1,77 @@
+<% layout('layouts/boilerplate') %>
+    <%- include('./partials/flash') %>
+
+        <h2>
+            <%= title %>
+        </h2>
+        <div class="card">
+
+            <div class="d-flex justify-content-between align-items-center p-3">
+                <div class="d-flex bg-dark rounded align-self-start" style="width: 230px; height: 200px;">
+                    <div class="d-flex flex-column text-white p-4">
+                        <h5 class="card-title">Regensburg</h5>
+                        <div class="card-text d-flex flex-column">
+                            <span class="card-text">Lat:</span>
+                            <span class="card-text">Lon:</span>
+                        </div>
+                    </div>
+                    <img src="" alt="Logo Weather" width="24" height="24"/>
+                </div>
+
+                <div class="d-flex bg-dark rounded align-self-start" style="width: 230px; height: 200px;">
+                    <div class="d-flex flex-column text-white p-4">
+                        <h5 class="card-title">Weather</h5>
+                        <div class="card-text d-flex flex-column">
+                            <span class="card-text">Sunny</span>
+                        </div>
+
+                    </div>
+                    <img src="" alt="Logo Weather" />
+                </div>
+
+                <div class="d-flex bg-dark rounded align-self-start" style="width: 230px; height: 200px;">
+                    <div class="d-flex flex-column text-white p-4">
+                        <h5 class="card-title">Temperature</h5>
+                        <div class="card-text d-flex flex-column">
+                            <span class="card-text">32.5 Grad</span>
+                            <span class="card-text">Max:</span>
+                            <span class="card-text">Min:</span>
+                        </div>
+
+                    </div>
+                    <img src="" alt="Logo Weather" />
+                </div>
+
+                <div class="d-flex bg-dark rounded align-self-start" style="width: 230px; height: 200px;">
+                    <div class="d-flex flex-column text-white p-4">
+                        <h5 class="card-title">Wind</h5>
+                        <div class="card-text d-flex flex-column">
+                            <span class="card-text">15 bft</span>
+                            <span class="card-text">South</span>
+                            <span class="card-text">Max:</span>
+                            <span class="card-text">Min:</span>
+                        </div>
+
+                    </div>
+                    <img src="" alt="Logo Weather" />
+                </div>
+
+                <div class="d-flex bg-dark rounded align-self-start" style="width: 230px; height: 200px;">
+                    <div class="d-flex flex-column text-white p-4">
+                        <h5 class="card-title">Air Pressure</h5>
+                        <div class="card-text d-flex flex-column">
+                            <span class="card-text">90 hpa</span>
+                            <span class="card-text">Max:</span>
+                            <span class="card-text">Min:</span>
+                        </div>
+
+                    </div>
+                    <img src="" alt="Logo Weather" />
+                </div>
+            </div>
+
+        </div>
+
+        <%- include("./partials/listWeather.ejs") %>
+
+            <%- include("./partials/addWeather.ejs") %>
