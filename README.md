@@ -1,7 +1,11 @@
 # Weathertop
-## By Nabil Fatih
+**Name: Nabil Fatih**
+**Matrikelnummer: 3271528**
 
-A starter project for a web application.
-
-This is Web app template project using Node.js, Express, Handlebars and Bootstrap for the front end.
-It includes basic express setup, templating and routing.
+## Tools:
+- Node.js
+- Express
+- EJS : `Template engine`
+- Passport : `Authentication`
+- Bootstrap
+- PostgreSQL
