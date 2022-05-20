@@ -1,6 +1,6 @@
 # Weathertop
-**Name: Nabil Fatih**
-**Matrikelnummer: 3271528**
+- **Name: Nabil Fatih**
+- **Matrikelnummer: 3271528**
 
 ## Tools:
 - Node.js
