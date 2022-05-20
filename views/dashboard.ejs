@@ -32,7 +32,7 @@
                 </div>
 
               </div>
-              <img src="img/<%= data.icon %>.svg" alt="Logo Weather" width="56" height="56"
+              <img src="/img/<%= data.icon %>.svg" alt="Logo Weather" width="56" height="56"
                 style="color: rgb(220, 255, 208);" />
             </div>
 
@@ -42,14 +42,14 @@
                 <h5 class="card-title">Temperature</h5>
                 <div class="card-text d-flex flex-column">
                   <span class="card-text">
-                    <%= data.temp %> Grad
+                    <%= data.temp %> &#176;C
                   </span>
                   <span class="card-text">Max: <%= data.temp_max %></span>
                   <span class="card-text">Min: <%= data.temp_min %></span>
                 </div>
 
               </div>
-              <img src="img/temperature.svg" alt="Logo Weather" width="56" height="56" />
+              <img src="/img/temperature.svg" alt="Logo Weather" width="56" height="56" />
             </div>
 
             <div class="d-flex bg-dark rounded justify-content-between align-self-start px-3 py-4"
@@ -68,7 +68,7 @@
                 </div>
 
               </div>
-              <img src="img/wind.svg" alt="Logo Weather" width="56" height="56" />
+              <img src="/img/wind.svg" alt="Logo Weather" width="56" height="56" />
             </div>
 
             <div class="d-flex bg-dark rounded justify-content-between align-self-start px-3 py-4"
@@ -84,11 +84,27 @@
                 </div>
 
               </div>
-              <img src="img/air_pressure.svg" alt="Logo Weather" width="56" height="56" />
+              <img src="/img/air_pressure.svg" alt="Logo Weather" width="56" height="56" />
             </div>
           </div>
 
-          <div>
+          <div class="d-flex px-2 pb-2">
+            <a href="/city/<%= data.param_city %>" role="button">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="blue" class="bi bi-file-earmark"
+                viewBox="0 0 16 16">
+                <path
+                  d="M14 4.5V14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h5.5L14 4.5zm-3 0A1.5 1.5 0 0 1 9.5 3V1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V4.5h-2z" />
+              </svg>
+            </a>
+            <a href="/dashboard/<%= data.param_city %>/delete" role="button">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="blue" class="bi bi-trash"
+                viewBox="0 0 16 16">
+                <path
+                  d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z" />
+                <path fill-rule="evenodd"
+                  d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z" />
+              </svg>
+            </a>
 
           </div>
         </div>

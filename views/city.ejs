@@ -4,74 +4,91 @@
         <h2>
             <%= title %>
         </h2>
-        <div class="card">
-
-            <div class="d-flex justify-content-between align-items-center p-3">
-                <div class="d-flex bg-dark rounded align-self-start" style="width: 230px; height: 200px;">
-                    <div class="d-flex flex-column text-white p-4">
-                        <h5 class="card-title">Regensburg</h5>
-                        <div class="card-text d-flex flex-column">
-                            <span class="card-text">Lat:</span>
-                            <span class="card-text">Lon:</span>
+        <% for (let data of cityList) {%>
+            <div class="card mb-3">
+                <div class="d-flex justify-content-between align-items-center p-2">
+                    <div class="d-flex bg-dark rounded justify-content-between align-self-start px-3 py-4"
+                        style="width: 240px; height: 200px;">
+                        <div class="d-flex flex-column text-white">
+                            <h5 class="card-title">
+                                <%= data.city %>
+                            </h5>
+                            <div class="card-text d-flex flex-column">
+                                <span class="card-text">Lat: <%= data.latitude %></span>
+                                <span class="card-text">Lon: <%= data.longitude %></span>
+                            </div>
                         </div>
                     </div>
-                    <img src="" alt="Logo Weather" width="24" height="24"/>
-                </div>
 
-                <div class="d-flex bg-dark rounded align-self-start" style="width: 230px; height: 200px;">
-                    <div class="d-flex flex-column text-white p-4">
-                        <h5 class="card-title">Weather</h5>
-                        <div class="card-text d-flex flex-column">
-                            <span class="card-text">Sunny</span>
+                    <div class="d-flex bg-dark rounded justify-content-between align-self-start px-3 py-4"
+                        style="width: 240px; height: 200px;">
+                        <div class="d-flex flex-column text-white">
+                            <h5 class="card-title">Weather</h5>
+                            <div class="card-text d-flex flex-column">
+                                <span class="card-text">
+                                    <%= data.weather %>
+                                </span>
+                            </div>
+
                         </div>
-
+                        <img src="/img/<%= data.icon %>.svg" alt="Logo Weather" width="56" height="56"
+                            style="color: rgb(220, 255, 208);" />
                     </div>
-                    <img src="" alt="Logo Weather" />
-                </div>
 
-                <div class="d-flex bg-dark rounded align-self-start" style="width: 230px; height: 200px;">
-                    <div class="d-flex flex-column text-white p-4">
-                        <h5 class="card-title">Temperature</h5>
-                        <div class="card-text d-flex flex-column">
-                            <span class="card-text">32.5 Grad</span>
-                            <span class="card-text">Max:</span>
-                            <span class="card-text">Min:</span>
+                    <div class="d-flex bg-dark rounded justify-content-between align-self-start px-3 py-4"
+                        style="width: 240px; height: 200px;">
+                        <div class="d-flex flex-column text-white">
+                            <h5 class="card-title">Temperature</h5>
+                            <div class="card-text d-flex flex-column">
+                                <span class="card-text">
+                                    <%= data.temp %> &#176;C
+                                </span>
+                                <span class="card-text">Max: <%= data.temp_max %></span>
+                                <span class="card-text">Min: <%= data.temp_min %></span>
+                            </div>
+
                         </div>
-
+                        <img src="/img/temperature.svg" alt="Logo Weather" width="56" height="56" />
                     </div>
-                    <img src="" alt="Logo Weather" />
-                </div>
 
-                <div class="d-flex bg-dark rounded align-self-start" style="width: 230px; height: 200px;">
-                    <div class="d-flex flex-column text-white p-4">
-                        <h5 class="card-title">Wind</h5>
-                        <div class="card-text d-flex flex-column">
-                            <span class="card-text">15 bft</span>
-                            <span class="card-text">South</span>
-                            <span class="card-text">Max:</span>
-                            <span class="card-text">Min:</span>
+                    <div class="d-flex bg-dark rounded justify-content-between align-self-start px-3 py-4"
+                        style="width: 240px; height: 200px;">
+                        <div class="d-flex flex-column text-white">
+                            <h5 class="card-title">Wind</h5>
+                            <div class="card-text d-flex flex-column">
+                                <span class="card-text">
+                                    <%= data.wind_speed %> m/s
+                                </span>
+                                <span class="card-text">
+                                    <%= data.degree %>
+                                </span>
+                                <span class="card-text">Max: <%= data.wind_speed_max %></span>
+                                <span class="card-text">Min: <%= data.wind_speed_min %></span>
+                            </div>
+
                         </div>
-
+                        <img src="/img/wind.svg" alt="Logo Weather" width="56" height="56" />
                     </div>
-                    <img src="" alt="Logo Weather" />
-                </div>
 
-                <div class="d-flex bg-dark rounded align-self-start" style="width: 230px; height: 200px;">
-                    <div class="d-flex flex-column text-white p-4">
-                        <h5 class="card-title">Air Pressure</h5>
-                        <div class="card-text d-flex flex-column">
-                            <span class="card-text">90 hpa</span>
-                            <span class="card-text">Max:</span>
-                            <span class="card-text">Min:</span>
+                    <div class="d-flex bg-dark rounded justify-content-between align-self-start px-3 py-4"
+                        style="width: 240px; height: 200px;">
+                        <div class="d-flex flex-column text-white">
+                            <h5 class="card-title">Air Pressure</h5>
+                            <div class="card-text d-flex flex-column">
+                                <span class="card-text">
+                                    <%= data.air_pressure %> hpa
+                                </span>
+                                <span class="card-text">Max: <%= data.air_pressure_max %></span>
+                                <span class="card-text">Min: <%= data.air_pressure_min %></span>
+                            </div>
+
                         </div>
-
+                        <img src="/img/air_pressure.svg" alt="Logo Weather" width="56" height="56" />
                     </div>
-                    <img src="" alt="Logo Weather" />
                 </div>
             </div>
+            <% } %>
 
-        </div>
+                <%- include("./partials/listWeather.ejs") %>
 
-        <%- include("./partials/listWeather.ejs") %>
-
-            <%- include("./partials/addWeather.ejs") %>
+                    <%- include("./partials/addWeather.ejs") %>

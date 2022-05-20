@@ -16,11 +16,24 @@ const dashboard = {
   },
 
   async add(req, res) {
-    logger.info("dashboard rendering");
     const username = req.user.username;
     const { city, latitude, longitude } = req.body;
-    await cityStore.addCity(username, city, latitude, longitude);
+    const result = await cityStore.addCity(username, city, latitude, longitude);
+
+    if (result?.length) {
+      req.flash("error", "City already added!");
+      return res.redirect("/dashboard");
+    }
+
     req.flash("success", "City added!");
+    res.redirect("/dashboard");
+  },
+
+  async delete(req, res) {
+    const username = req.user.username;
+    const { param_city } = req.params;
+    await cityStore.removeCity(param_city, username);
+    req.flash("success", "City deleted!");
     res.redirect("/dashboard");
   },
 };

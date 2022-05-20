@@ -7,5 +7,6 @@ const catchAsync = require("../utils/catchAsync.js");
 
 router.get("/", isLoggedIn, catchAsync(dashboard.index));
 router.post("/", isLoggedIn, catchAsync(dashboard.add));
+router.get("/:param_city/delete", isLoggedIn, catchAsync(dashboard.delete));
 
 module.exports = router;
