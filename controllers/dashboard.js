@@ -20,6 +20,11 @@ const dashboard = {
     const { city, latitude, longitude } = req.body;
     const result = await cityStore.addCity(username, city, latitude, longitude);
 
+    if (result === null) {
+      req.flash("error", "City not found!");
+      return res.redirect("/dashboard");
+    }
+
     if (result?.length) {
       req.flash("error", "City already added!");
       return res.redirect("/dashboard");
