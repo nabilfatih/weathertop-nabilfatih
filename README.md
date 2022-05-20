@@ -1,5 +1,5 @@
 # Weathertop
-- **Name: Nabil Fatih**
+- **Name: Nabil Akbarazzima Fatih**
 - **Matrikelnummer: 3271528**
 
 ## Tools:
