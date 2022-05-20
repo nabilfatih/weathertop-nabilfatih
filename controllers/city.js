@@ -8,8 +8,6 @@ const city = {
     const { param_city } = req.params;
     const cityList = await cityStore.getUserOneCity(param_city, username);
 
-    console.log(cityList);
-
     const viewData = {
       title: "City",
       user: req.user,
