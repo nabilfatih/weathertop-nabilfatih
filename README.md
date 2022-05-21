@@ -3,10 +3,10 @@
 - **Matrikelnummer: 3271528**
 
 ## Tools:
-- Node.js
-- Express
+- Node.js : `Back End`
+- Express : `Routing`
 - EJS : `Template engine`
 - Passport : `Authentication`
-- Bootstrap
-- PostgreSQL
-- OpenWeatherAPI : `API for getting the weather data`
+- Bootstrap : `Front End (Styling)`
+- PostgreSQL : `Database`
+- OpenWeather : `API for getting the weather data`
