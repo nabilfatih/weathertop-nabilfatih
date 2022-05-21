@@ -9,3 +9,4 @@
 - Passport : `Authentication`
 - Bootstrap
 - PostgreSQL
+- OpenWeatherAPI : `API for getting the weather data`
