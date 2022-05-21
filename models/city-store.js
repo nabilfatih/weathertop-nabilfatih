@@ -104,7 +104,7 @@ const cityStore = {
         }
 
         let deg;
-        switch (data.wind.deg) {
+        switch (true) {
           case data.wind.deg >= 348.75 && data.wind.deg <= 11.25:
             deg = "North";
             break;
@@ -150,7 +150,7 @@ const cityStore = {
           case data.wind.deg >= 303.75 && data.wind.deg <= 326.25:
             deg = "North West";
             break;
-          case data.wind.deg >= 303.75 && data.wind.deg <= 326.25:
+          case data.wind.deg >= 326.25 && data.wind.deg <= 348.75:
             deg = "North North West";
             break;
         }
@@ -164,7 +164,7 @@ const cityStore = {
 
         try {
           const query =
-            "INSERT INTO city_list (id, added, param_city, username, city, latitude, longitude, weather, icon, temp, temp_max, temp_min, wind_speed, degree, wind_speed_max, wind_speed_min, air_pressure, air_pressure_madata.wind.deg, air_pressure_min) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19)";
+            "INSERT INTO city_list (id, added, param_city, username, city, latitude, longitude, weather, icon, temp, temp_max, temp_min, wind_speed, degree, wind_speed_max, wind_speed_min, air_pressure, air_pressure_max, air_pressure_min) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19)";
           const values = [
             uuid(),
             new Date(),
@@ -189,6 +189,7 @@ const cityStore = {
           await dataStoreClient.query(query, values);
         } catch (e) {
           logger.error("Error cannot add city:", e);
+          throw e;
         }
       } catch (e) {
         return null;
@@ -197,4 +198,4 @@ const cityStore = {
   },
 };
 
-module.edata.wind.degports = cityStore;
+module.exports = cityStore;
