@@ -3,6 +3,7 @@ const { uuid } = require("uuidv4");
 
 const dataStore = require("./data-store.js");
 const logger = require("../utils/logger.js");
+const { data } = require("../utils/logger.js");
 
 const cityStore = {
   async getUserCity(username) {
@@ -14,7 +15,7 @@ const cityStore = {
       let result = await dataStoreClient.query(query, values);
       return result.rows;
     } catch (e) {
-      logger.error("Error fetching playlist", e);
+      logger.error("Error fetching list of city:", e);
     }
   },
 
@@ -26,7 +27,7 @@ const cityStore = {
       let result = await dataStoreClient.query(query, values);
       return result.rows;
     } catch (e) {
-      logger.error("Error fetching playlist", e);
+      logger.error("Error fetching city:", e);
     }
   },
 
@@ -38,7 +39,7 @@ const cityStore = {
       let result = await dataStoreClient.query(query, values);
       return result.rows;
     } catch (e) {
-      logger.error("Error fetching playlist", e);
+      logger.error("Error fetching city:", e);
     }
   },
 
@@ -72,8 +73,6 @@ const cityStore = {
           config
         );
 
-        console.log(data);
-
         const weatherMain = data.weather.reduce(() => ({}));
 
         let icon;
@@ -85,7 +84,7 @@ const cityStore = {
               icon = "thunderstorm";
               break;
             case "3":
-              text = "drizzle";
+              icon = "drizzle";
               break;
             case "5":
               icon = "rain";
@@ -104,6 +103,58 @@ const cityStore = {
           }
         }
 
+        let deg;
+        switch (data.wind.deg) {
+          case data.wind.deg >= 348.75 && data.wind.deg <= 11.25:
+            deg = "North";
+            break;
+          case data.wind.deg >= 11.25 && data.wind.deg <= 33.75:
+            deg = "North North East";
+            break;
+          case data.wind.deg >= 33.75 && data.wind.deg <= 56.25:
+            deg = "North East";
+            break;
+          case data.wind.deg >= 56.25 && data.wind.deg <= 78.75:
+            deg = "East North East";
+            break;
+          case data.wind.deg >= 78.75 && data.wind.deg <= 101.25:
+            deg = "East";
+            break;
+          case data.wind.deg >= 101.25 && data.wind.deg <= 123.75:
+            deg = "East South East";
+            break;
+          case data.wind.deg >= 123.75 && data.wind.deg <= 146.25:
+            deg = "South East";
+            break;
+          case data.wind.deg >= 146.25 && data.wind.deg <= 168.75:
+            deg = "South South East";
+            break;
+          case data.wind.deg >= 168.75 && data.wind.deg <= 191.25:
+            deg = "South";
+            break;
+          case data.wind.deg >= 191.25 && data.wind.deg <= 213.75:
+            deg = "South South West";
+            break;
+          case data.wind.deg >= 213.75 && data.wind.deg <= 236.25:
+            deg = "South West";
+            break;
+          case data.wind.deg >= 236.25 && data.wind.deg <= 258.75:
+            deg = "West South West";
+            break;
+          case data.wind.deg >= 258.75 && data.wind.deg <= 281.25:
+            deg = "West";
+            break;
+          case data.wind.deg >= 281.25 && data.wind.deg <= 303.75:
+            deg = "West North West";
+            break;
+          case data.wind.deg >= 303.75 && data.wind.deg <= 326.25:
+            deg = "North West";
+            break;
+          case data.wind.deg >= 303.75 && data.wind.deg <= 326.25:
+            deg = "North North West";
+            break;
+        }
+
         const dataStoreClient = await dataStore.getDataStore();
 
         let windSpeedMax = 2;
@@ -113,7 +164,7 @@ const cityStore = {
 
         try {
           const query =
-            "INSERT INTO city_list (id, added, param_city, username, city, latitude, longitude, weather, icon, temp, temp_max, temp_min, wind_speed, degree, wind_speed_max, wind_speed_min, air_pressure, air_pressure_max, air_pressure_min) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19)";
+            "INSERT INTO city_list (id, added, param_city, username, city, latitude, longitude, weather, icon, temp, temp_max, temp_min, wind_speed, degree, wind_speed_max, wind_speed_min, air_pressure, air_pressure_madata.wind.deg, air_pressure_min) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19)";
           const values = [
             uuid(),
             new Date(),
@@ -128,7 +179,7 @@ const cityStore = {
             data.main.temp_max,
             data.main.temp_min,
             data.wind.speed,
-            data.wind.deg,
+            deg,
             windSpeedMax,
             windSpeedMin,
             data.main.pressure,
@@ -137,7 +188,7 @@ const cityStore = {
           ];
           await dataStoreClient.query(query, values);
         } catch (e) {
-          logger.error("Error cannot add city", e);
+          logger.error("Error cannot add city:", e);
         }
       } catch (e) {
         return null;
@@ -146,4 +197,4 @@ const cityStore = {
   },
 };
 
-module.exports = cityStore;
+module.edata.wind.degports = cityStore;
