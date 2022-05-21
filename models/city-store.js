@@ -4,6 +4,7 @@ const { uuid } = require("uuidv4");
 const dataStore = require("./data-store.js");
 const logger = require("../utils/logger.js");
 const { data } = require("../utils/logger.js");
+const weatherStore = require("./weather-store.js");
 
 const cityStore = {
   async getUserCity(username) {
@@ -187,6 +188,21 @@ const cityStore = {
             airPressureMin,
           ];
           await dataStoreClient.query(query, values);
+        } catch (e) {
+          logger.error("Error cannot add city:", e);
+          throw e;
+        }
+
+        try {
+          await weatherStore.addWeather(
+            data.name.toLowerCase(),
+            username,
+            weatherMain.id.toString(),
+            data.main.temp,
+            data.wind.speed,
+            data.wind.deg,
+            data.main.pressure
+          );
         } catch (e) {
           logger.error("Error cannot add city:", e);
           throw e;
