@@ -29,15 +29,37 @@ const weatherStore = {
     }
   },
 
-  async removeWeather(param_city, username) {
-    const query =
-      "DELETE FROM weather_list WHERE param_weather=$1 AND username=$2";
-    const values = [param_weather, username];
+  async removeWeather(param_city, id, username) {
+    const result = await this.getUserWeather(param_city, username);
+
+    if (result.length <= 2) {
+      return null;
+    }
+
     const dataStoreClient = await dataStore.getDataStore();
     try {
+      let query = "DELETE FROM weather_list WHERE id=$1 AND username=$2";
+      let values = [id, username];
       await dataStoreClient.query(query, values);
+
+      let rows = await this.getUserWeather(param_city, username);
+      let data = rows[0];
+
+      await this.updateWeather(
+        data.weather,
+        data.icon,
+        data.temp,
+        data.wind_direction,
+        data.wind,
+        data.air_pressure,
+        param_city,
+        username
+      );
+
+      return true;
     } catch (e) {
       logger.error("Unable to remove weather:", e);
+      throw e;
     }
   },
 

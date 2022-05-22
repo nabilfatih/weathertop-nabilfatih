@@ -54,6 +54,18 @@ const city = {
 
   async delete(req, res) {
     logger.info("Weather rendering");
+    const username = req.user.username;
+    const { param_city, id } = req.params;
+
+    const result = await weatherStore.removeWeather(param_city, id, username);
+
+    if (!result) {
+      req.flash("error", "Can't delete more weather!");
+      return res.redirect(`/city/${param_city}`);
+    }
+
+    req.flash("success", "Weather deleted!");
+    res.redirect(`/city/${param_city}`);
   },
 };
 
