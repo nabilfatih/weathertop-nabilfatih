@@ -1,10 +1,7 @@
-const axios = require("axios");
 const { uuid } = require("uuidv4");
 
 const dataStore = require("./data-store");
 const logger = require("../utils/logger.js");
-const { updateCity } = require("./city-store");
-const cityStore = require("./city-store");
 
 const weatherStore = {
   async getUserWeather(param_city, username) {
