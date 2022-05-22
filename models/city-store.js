@@ -168,10 +168,10 @@ const cityStore = {
 
         const dataStoreClient = await dataStore.getDataStore();
 
-        let windSpeedMax = 2;
-        let windSpeedMin = 2;
-        let airPressureMax = 2;
-        let airPressureMin = 2;
+        let windSpeedMax = null;
+        let windSpeedMin = null;
+        let airPressureMax = null;
+        let airPressureMin = null;
 
         try {
           const query =

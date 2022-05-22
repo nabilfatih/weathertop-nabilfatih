@@ -4,6 +4,7 @@ const { uuid } = require("uuidv4");
 const dataStore = require("./data-store");
 const logger = require("../utils/logger.js");
 const { updateCity } = require("./city-store");
+const cityStore = require("./city-store");
 
 const weatherStore = {
   async getUserWeather(param_city, username) {
@@ -188,15 +189,76 @@ const weatherStore = {
         }
       }
 
+      async function getAirPressure(param_city, username) {
+        const query =
+          "SELECT air_pressure FROM weather_list WHERE param_city=$1 AND username=$2";
+        const values = [param_city, username];
+        const dataStoreClient = await dataStore.getDataStore();
+        try {
+          let result = await dataStoreClient.query(query, values);
+          return result.rows;
+        } catch (e) {
+          logger.error("Error fetching city air pressure:", e);
+        }
+      }
+
+      async function getTemperature(param_city, username) {
+        const query =
+          "SELECT temp FROM weather_list WHERE param_city=$1 AND username=$2";
+        const values = [param_city, username];
+        const dataStoreClient = await dataStore.getDataStore();
+        try {
+          let result = await dataStoreClient.query(query, values);
+          return result.rows;
+        } catch (e) {
+          logger.error("Error fetching city temperature:", e);
+        }
+      }
+
+      async function getWindSpeed(param_city, username) {
+        const query =
+          "SELECT wind FROM weather_list WHERE param_city=$1 AND username=$2";
+        const values = [param_city, username];
+        const dataStoreClient = await dataStore.getDataStore();
+        try {
+          let result = await dataStoreClient.query(query, values);
+          return result.rows;
+        } catch (e) {
+          logger.error("Error fetching city wind speed:", e);
+        }
+      }
+
+      const tempList = await getTemperature(param_city, username);
+      const windList = await getWindSpeed(param_city, username);
+      const airPressureList = await getAirPressure(param_city, username);
+
+      const arrTemp = tempList.map(Object.values);
+      const tempMin = Math.min(...arrTemp);
+      const tempMax = Math.max(...arrTemp);
+
+      const arrWind = windList.map(Object.values);
+      const windMin = Math.min(...arrWind);
+      const windMax = Math.max(...arrWind);
+
+      const arrAirPressure = airPressureList.map(Object.values);
+      const airPressureMin = Math.min(...arrAirPressure);
+      const airPressureMax = Math.max(...arrAirPressure);
+
       const query =
-        "UPDATE city_list SET weather=$1, icon=$2, temp=$3, degree=$4, wind_speed=$5, air_pressure=$6 WHERE param_city=$7 AND username=$8";
+        "UPDATE city_list SET weather=$1, icon=$2, temp=$3, temp_max=$4, temp_min=$5, degree=$6, wind_speed=$7, wind_speed_max=$8, wind_speed_min=$9, air_pressure=$10, air_pressure_max=$11, air_pressure_min=$12 WHERE param_city=$13 AND username=$14";
       const values = [
         weather,
         icon,
         temperature,
+        tempMax,
+        tempMin,
         deg,
         windSpeed,
+        windMax,
+        windMin,
         airPressure,
+        airPressureMax,
+        airPressureMin,
         param_city,
         username,
       ];

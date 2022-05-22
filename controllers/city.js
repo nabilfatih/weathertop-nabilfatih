@@ -27,7 +27,13 @@ const city = {
     const { code, temperature, windSpeed, windDirection, airPressure } =
       req.body;
 
-    if (code <= 0 || windDirection <= 0 || windSpeed <= 0 || airPressure <= 0) {
+    if (
+      code <= 0 ||
+      windDirection <= 0 ||
+      windDirection >= 360 ||
+      windSpeed <= 0 ||
+      airPressure <= 0
+    ) {
       req.flash("error", "Failed add weather!");
       return res.redirect(`/city/${param_city}`);
     }
