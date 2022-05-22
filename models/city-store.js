@@ -79,8 +79,6 @@ const cityStore = {
           config
         );
 
-        console.log(data);
-
         const weatherMain = data.weather.reduce(() => ({}));
 
         let icon;
