@@ -41,6 +41,155 @@ const weatherStore = {
     }
   },
 
+  async getAirPressure(param_city, username) {
+    const query =
+      "SELECT air_pressure FROM weather_list WHERE param_city=$1 AND username=$2";
+    const values = [param_city, username];
+    const dataStoreClient = await dataStore.getDataStore();
+    try {
+      let result = await dataStoreClient.query(query, values);
+      return result.rows;
+    } catch (e) {
+      logger.error("Error fetching city air pressure:", e);
+    }
+  },
+
+  async getTemperature(param_city, username) {
+    const query =
+      "SELECT temp FROM weather_list WHERE param_city=$1 AND username=$2";
+    const values = [param_city, username];
+    const dataStoreClient = await dataStore.getDataStore();
+    try {
+      let result = await dataStoreClient.query(query, values);
+      return result.rows;
+    } catch (e) {
+      logger.error("Error fetching city temperature:", e);
+    }
+  },
+
+  async getWindSpeed(param_city, username) {
+    const query =
+      "SELECT wind FROM weather_list WHERE param_city=$1 AND username=$2";
+    const values = [param_city, username];
+    const dataStoreClient = await dataStore.getDataStore();
+    try {
+      let result = await dataStoreClient.query(query, values);
+      return result.rows;
+    } catch (e) {
+      logger.error("Error fetching city wind speed:", e);
+    }
+  },
+
+  async updateWeather(
+    code,
+    icon,
+    temperature,
+    deg,
+    windSpeed,
+    airPressure,
+    param_city,
+    username
+  ) {
+    try {
+      let weather;
+      if (code.toString() == "800") {
+        weather = "Clear";
+      } else {
+        switch (code.toString().charAt(0)) {
+          case "2":
+            weather = "Thunderstorm";
+            break;
+          case "3":
+            weather = "Drizzle";
+            break;
+          case "5":
+            weather = "Rain";
+            break;
+          case "6":
+            weather = "Snow";
+            break;
+          case "7":
+            weather = "Atmosphere";
+            break;
+          case "8":
+            weather = "Clouds";
+            break;
+          default:
+            weather = "Clear";
+        }
+      }
+
+      const tempList = await this.getTemperature(param_city, username);
+      const windList = await this.getWindSpeed(param_city, username);
+      const airPressureList = await this.getAirPressure(param_city, username);
+
+      const dataStoreClient = await dataStore.getDataStore();
+
+      if (
+        tempList.length > 1 &&
+        windList.length > 1 &&
+        airPressureList.length > 1
+      ) {
+        const arrTemp = tempList.map(Object.values);
+        let tempMin = Math.min(...arrTemp);
+        let tempMax = Math.max(...arrTemp);
+
+        const arrWind = windList.map(Object.values);
+        let windMin = Math.min(...arrWind);
+        let windMax = Math.max(...arrWind);
+
+        const arrAirPressure = airPressureList.map(Object.values);
+        let airMin = Math.min(...arrAirPressure);
+        let airMax = Math.max(...arrAirPressure);
+
+        const query =
+          "UPDATE city_list SET weather=$1, icon=$2, temp=$3, temp_max=$4, temp_min=$5, degree=$6, wind_speed=$7, wind_speed_max=$8, wind_speed_min=$9, air_pressure=$10, air_pressure_max=$11, air_pressure_min=$12 WHERE param_city=$13 AND username=$14";
+        const values = [
+          weather,
+          icon,
+          temperature,
+          tempMax,
+          tempMin,
+          deg,
+          windSpeed,
+          windMax,
+          windMin,
+          airPressure,
+          airMax,
+          airMin,
+          param_city,
+          username,
+        ];
+        try {
+          await dataStoreClient.query(query, values);
+        } catch (e) {
+          logger.error("Error updating city", e);
+        }
+      } else {
+        const query =
+          "UPDATE city_list SET weather=$1, icon=$2, temp=$3, degree=$4, wind_speed=$5, air_pressure=$6 WHERE param_city=$7 AND username=$8";
+        const values = [
+          weather,
+          icon,
+          temperature,
+          deg,
+          windSpeed,
+          airPressure,
+          param_city,
+          username,
+        ];
+        try {
+          await dataStoreClient.query(query, values);
+        } catch (e) {
+          logger.error("Error updating city", e);
+        }
+      }
+    } catch (e) {
+      logger.error("Error cannot update city:", e);
+      throw e;
+    }
+  },
+
   async addWeather(
     param_city,
     username,
@@ -157,117 +306,16 @@ const weatherStore = {
       throw e;
     }
 
-    try {
-      let weather;
-      if (code.toString() == "800") {
-        weather = "Clear";
-      } else {
-        switch (code.toString().charAt(0)) {
-          case "2":
-            weather = "Thunderstorm";
-            break;
-          case "3":
-            weather = "Drizzle";
-            break;
-          case "5":
-            weather = "Rain";
-            break;
-          case "6":
-            weather = "Snow";
-            break;
-          case "7":
-            weather = "Atmosphere";
-            break;
-          case "8":
-            weather = "Clouds";
-            break;
-          default:
-            weather = "Clear";
-        }
-      }
-
-      async function getAirPressure(param_city, username) {
-        const query =
-          "SELECT air_pressure FROM weather_list WHERE param_city=$1 AND username=$2";
-        const values = [param_city, username];
-        const dataStoreClient = await dataStore.getDataStore();
-        try {
-          let result = await dataStoreClient.query(query, values);
-          return result.rows;
-        } catch (e) {
-          logger.error("Error fetching city air pressure:", e);
-        }
-      }
-
-      async function getTemperature(param_city, username) {
-        const query =
-          "SELECT temp FROM weather_list WHERE param_city=$1 AND username=$2";
-        const values = [param_city, username];
-        const dataStoreClient = await dataStore.getDataStore();
-        try {
-          let result = await dataStoreClient.query(query, values);
-          return result.rows;
-        } catch (e) {
-          logger.error("Error fetching city temperature:", e);
-        }
-      }
-
-      async function getWindSpeed(param_city, username) {
-        const query =
-          "SELECT wind FROM weather_list WHERE param_city=$1 AND username=$2";
-        const values = [param_city, username];
-        const dataStoreClient = await dataStore.getDataStore();
-        try {
-          let result = await dataStoreClient.query(query, values);
-          return result.rows;
-        } catch (e) {
-          logger.error("Error fetching city wind speed:", e);
-        }
-      }
-
-      const tempList = await getTemperature(param_city, username);
-      const windList = await getWindSpeed(param_city, username);
-      const airPressureList = await getAirPressure(param_city, username);
-
-      const arrTemp = tempList.map(Object.values);
-      const tempMin = Math.min(...arrTemp);
-      const tempMax = Math.max(...arrTemp);
-
-      const arrWind = windList.map(Object.values);
-      const windMin = Math.min(...arrWind);
-      const windMax = Math.max(...arrWind);
-
-      const arrAirPressure = airPressureList.map(Object.values);
-      const airPressureMin = Math.min(...arrAirPressure);
-      const airPressureMax = Math.max(...arrAirPressure);
-
-      const query =
-        "UPDATE city_list SET weather=$1, icon=$2, temp=$3, temp_max=$4, temp_min=$5, degree=$6, wind_speed=$7, wind_speed_max=$8, wind_speed_min=$9, air_pressure=$10, air_pressure_max=$11, air_pressure_min=$12 WHERE param_city=$13 AND username=$14";
-      const values = [
-        weather,
-        icon,
-        temperature,
-        tempMax,
-        tempMin,
-        deg,
-        windSpeed,
-        windMax,
-        windMin,
-        airPressure,
-        airPressureMax,
-        airPressureMin,
-        param_city,
-        username,
-      ];
-      try {
-        await dataStoreClient.query(query, values);
-      } catch (e) {
-        logger.error("Error updating city", e);
-      }
-    } catch (e) {
-      logger.error("Error cannot update city:", e);
-      throw e;
-    }
+    await this.updateWeather(
+      code,
+      icon,
+      temperature,
+      deg,
+      windSpeed,
+      airPressure,
+      param_city,
+      username
+    );
   },
 };
 
