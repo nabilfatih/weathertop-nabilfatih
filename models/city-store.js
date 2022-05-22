@@ -3,8 +3,7 @@ const { uuid } = require("uuidv4");
 
 const dataStore = require("./data-store.js");
 const logger = require("../utils/logger.js");
-const { data } = require("../utils/logger.js");
-const weatherStore = require("./weather-store.js");
+const weatherStore = require("./weather-store");
 
 const cityStore = {
   async getUserCity(username) {
@@ -53,6 +52,12 @@ const cityStore = {
     } catch (e) {
       logger.error("Unable to remove city:", e);
     }
+
+    try {
+      await weatherStore.removeAllWeather(param_city, username);
+    } catch (e) {
+      logger.error("Unable to remove all weather city:", e);
+    }
   },
 
   async addCity(username, city, latitude, longitude) {
@@ -73,6 +78,8 @@ const cityStore = {
           `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${process.env.WEATHER_API_KEY}&units=metric`,
           config
         );
+
+        console.log(data);
 
         const weatherMain = data.weather.reduce(() => ({}));
 
@@ -106,7 +113,10 @@ const cityStore = {
 
         let deg;
         switch (true) {
-          case data.wind.deg >= 348.75 && data.wind.deg <= 11.25:
+          case data.wind.deg >= 348.75 && data.wind.deg <= 360:
+            deg = "North";
+            break;
+          case data.wind.deg >= 0 && data.wind.deg <= 11.25:
             deg = "North";
             break;
           case data.wind.deg >= 11.25 && data.wind.deg <= 33.75:
@@ -204,7 +214,7 @@ const cityStore = {
             data.main.pressure
           );
         } catch (e) {
-          logger.error("Error cannot add city:", e);
+          logger.error("Error cannot add weather:", e);
           throw e;
         }
       } catch (e) {

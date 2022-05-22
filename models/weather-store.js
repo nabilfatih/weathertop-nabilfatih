@@ -1,9 +1,9 @@
 const axios = require("axios");
 const { uuid } = require("uuidv4");
 
-const dataStore = require("./data-store.js");
+const dataStore = require("./data-store");
 const logger = require("../utils/logger.js");
-const { data } = require("../utils/logger.js");
+const { updateCity } = require("./city-store");
 
 const weatherStore = {
   async getUserWeather(param_city, username) {
@@ -19,19 +19,19 @@ const weatherStore = {
     }
   },
 
-  async removeWeather(param_weather, username) {
+  async removeAllWeather(param_city, username) {
     const query =
-      "DELETE FROM weather_list WHERE param_weather=$1 AND username=$2";
-    const values = [param_weather, username];
+      "DELETE FROM weather_list WHERE param_city=$1 AND username=$2";
+    const values = [param_city, username];
     const dataStoreClient = await dataStore.getDataStore();
     try {
       await dataStoreClient.query(query, values);
     } catch (e) {
-      logger.error("Unable to remove weather:", e);
+      logger.error("Unable to remove all weather:", e);
     }
   },
 
-  async updateWeather(param_weather, username) {
+  async removeWeather(param_city, username) {
     const query =
       "DELETE FROM weather_list WHERE param_weather=$1 AND username=$2";
     const values = [param_weather, username];
@@ -82,7 +82,10 @@ const weatherStore = {
 
     let deg;
     switch (true) {
-      case windDirection >= 348.75 && windDirection <= 11.25:
+      case windDirection >= 348.75 && windDirection <= 360:
+        deg = "North";
+        break;
+      case windDirection >= 0 && windDirection <= 11.25:
         deg = "North";
         break;
       case windDirection >= 11.25 && windDirection <= 33.75:
@@ -153,6 +156,57 @@ const weatherStore = {
       await dataStoreClient.query(query, values);
     } catch (e) {
       logger.error("Error cannot add weather:", e);
+      throw e;
+    }
+
+    try {
+      let weather;
+      if (code.toString() == "800") {
+        weather = "Clear";
+      } else {
+        switch (code.toString().charAt(0)) {
+          case "2":
+            weather = "Thunderstorm";
+            break;
+          case "3":
+            weather = "Drizzle";
+            break;
+          case "5":
+            weather = "Rain";
+            break;
+          case "6":
+            weather = "Snow";
+            break;
+          case "7":
+            weather = "Atmosphere";
+            break;
+          case "8":
+            weather = "Clouds";
+            break;
+          default:
+            weather = "Clear";
+        }
+      }
+
+      const query =
+        "UPDATE city_list SET weather=$1, icon=$2, temp=$3, degree=$4, wind_speed=$5, air_pressure=$6 WHERE param_city=$7 AND username=$8";
+      const values = [
+        weather,
+        icon,
+        temperature,
+        deg,
+        windSpeed,
+        airPressure,
+        param_city,
+        username,
+      ];
+      try {
+        await dataStoreClient.query(query, values);
+      } catch (e) {
+        logger.error("Error updating city", e);
+      }
+    } catch (e) {
+      logger.error("Error cannot update city:", e);
       throw e;
     }
   },

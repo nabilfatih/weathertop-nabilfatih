@@ -42,12 +42,12 @@ const city = {
       airPressure
     );
 
-    req.flash("success", "City added!");
+    req.flash("success", "Weather added!");
     res.redirect(`/city/${param_city}`);
   },
 
   async delete(req, res) {
-    logger.info("city rendering");
+    logger.info("Weather rendering");
   },
 };
 
