@@ -24,6 +24,15 @@ const city = {
     logger.info("Weather rendering");
     const username = req.user.username;
     const { param_city } = req.params;
+
+    try {
+      await weatherStore.autoAddWeather(param_city, username);
+      req.flash("success", "Automatic measurement added!");
+      return res.redirect(`/city/${param_city}`);
+    } catch (e) {
+      req.flash("error", "Automatic measurement failed added!");
+      return res.redirect(`/city/${param_city}`);
+    }
   },
 
   async add(req, res) {

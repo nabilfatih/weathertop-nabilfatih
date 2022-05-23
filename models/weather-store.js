@@ -1,4 +1,5 @@
 const { uuid } = require("uuidv4");
+const axios = require("axios");
 
 const dataStore = require("./data-store");
 const logger = require("../utils/logger.js");
@@ -363,6 +364,143 @@ const weatherStore = {
       param_city,
       username
     );
+  },
+
+  async autoAddWeather(param_city, username) {
+    try {
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      };
+      const { data } = await axios.get(
+        `https://api.openweathermap.org/data/2.5/weather?q=${param_city}&appid=${process.env.WEATHER_API_KEY}&units=metric`,
+        config
+      );
+
+      const weatherMain = data.weather.reduce(() => ({}));
+
+      let icon;
+      if (weatherMain.id.toString() == "800") {
+        icon = "clear";
+      } else {
+        switch (weatherMain.id.toString().charAt(0)) {
+          case "2":
+            icon = "thunderstorm";
+            break;
+          case "3":
+            icon = "drizzle";
+            break;
+          case "5":
+            icon = "rain";
+            break;
+          case "6":
+            icon = "snow";
+            break;
+          case "7":
+            icon = "atmosphere";
+            break;
+          case "8":
+            icon = "clouds";
+            break;
+          default:
+            icon = "clear";
+        }
+      }
+
+      let deg;
+      switch (true) {
+        case data.wind.deg >= 348.75 && data.wind.deg <= 360:
+          deg = "North";
+          break;
+        case data.wind.deg >= 0 && data.wind.deg <= 11.25:
+          deg = "North";
+          break;
+        case data.wind.deg >= 11.25 && data.wind.deg <= 33.75:
+          deg = "North North East";
+          break;
+        case data.wind.deg >= 33.75 && data.wind.deg <= 56.25:
+          deg = "North East";
+          break;
+        case data.wind.deg >= 56.25 && data.wind.deg <= 78.75:
+          deg = "East North East";
+          break;
+        case data.wind.deg >= 78.75 && data.wind.deg <= 101.25:
+          deg = "East";
+          break;
+        case data.wind.deg >= 101.25 && data.wind.deg <= 123.75:
+          deg = "East South East";
+          break;
+        case data.wind.deg >= 123.75 && data.wind.deg <= 146.25:
+          deg = "South East";
+          break;
+        case data.wind.deg >= 146.25 && data.wind.deg <= 168.75:
+          deg = "South South East";
+          break;
+        case data.wind.deg >= 168.75 && data.wind.deg <= 191.25:
+          deg = "South";
+          break;
+        case data.wind.deg >= 191.25 && data.wind.deg <= 213.75:
+          deg = "South South West";
+          break;
+        case data.wind.deg >= 213.75 && data.wind.deg <= 236.25:
+          deg = "South West";
+          break;
+        case data.wind.deg >= 236.25 && data.wind.deg <= 258.75:
+          deg = "West South West";
+          break;
+        case data.wind.deg >= 258.75 && data.wind.deg <= 281.25:
+          deg = "West";
+          break;
+        case data.wind.deg >= 281.25 && data.wind.deg <= 303.75:
+          deg = "West North West";
+          break;
+        case data.wind.deg >= 303.75 && data.wind.deg <= 326.25:
+          deg = "North West";
+          break;
+        case data.wind.deg >= 326.25 && data.wind.deg <= 348.75:
+          deg = "North North West";
+          break;
+      }
+
+      const dataStoreClient = await dataStore.getDataStore();
+
+      try {
+        const query =
+          "INSERT INTO weather_list (id, username, param_city, added, time, weather, icon, temp, wind, wind_direction, air_pressure) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)";
+        const values = [
+          uuid(),
+          username,
+          param_city,
+          new Date(),
+          Date(Date.now()).toString(),
+          weatherMain.id.toString(),
+          icon,
+          data.main.temp,
+          data.wind.speed,
+          deg,
+          data.main.pressure,
+        ];
+        await dataStoreClient.query(query, values);
+      } catch (e) {
+        logger.error("Error cannot add weather:", e);
+        throw e;
+      }
+
+      await this.updateWeather(
+        weatherMain.id.toString(),
+        icon,
+        data.main.temp,
+        deg,
+        data.wind.speed,
+        data.main.pressure,
+        param_city,
+        username
+      );
+    } catch (e) {
+      console.log(e);
+      throw e;
+    }
   },
 };
 
