@@ -49,7 +49,10 @@
                 </div>
 
               </div>
-              <img src="/img/temperature.svg" alt="Logo Weather" width="56" height="56" />
+              <div class="d-flex flex-column align-items-center">
+                <img src="/img/temperature.svg" alt="Logo Weather" width="56" height="56" />
+                <img src="/img/<%= data.cond_temp %>Temp.svg" alt="Logo Weather Condition" width="46" height="46" />
+              </div>
             </div>
 
             <div class="d-flex bg-dark rounded justify-content-between align-self-start px-3 py-4"
@@ -68,7 +71,10 @@
                 </div>
 
               </div>
-              <img src="/img/wind.svg" alt="Logo Weather" width="56" height="56" />
+              <div class="d-flex flex-column align-items-center">
+                <img src="/img/wind.svg" alt="Logo Weather" width="56" height="56" />
+                <img src="/img/<%= data.cond_wind %>Wind.svg" alt="Logo Weather Condition" width="46" height="46" />
+              </div>
             </div>
 
             <div class="d-flex bg-dark rounded justify-content-between align-self-start px-3 py-4"
@@ -84,7 +90,10 @@
                 </div>
 
               </div>
-              <img src="/img/air_pressure.svg" alt="Logo Weather" width="56" height="56" />
+              <div class="d-flex flex-column align-items-center">
+                <img src="/img/air_pressure.svg" alt="Logo Weather" width="56" height="56" />
+                <img src="/img/<%= data.cond_air %>Air.svg" alt="Logo Weather Condition" width="46" height="46" />
+              </div>
             </div>
           </div>
 

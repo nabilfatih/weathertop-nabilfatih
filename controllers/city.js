@@ -20,6 +20,12 @@ const city = {
     res.render("city", viewData);
   },
 
+  async autoAdd(req, res) {
+    logger.info("Weather rendering");
+    const username = req.user.username;
+    const { param_city } = req.params;
+  },
+
   async add(req, res) {
     logger.info("Weather rendering");
     const username = req.user.username;
