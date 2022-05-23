@@ -11,7 +11,7 @@ const city = {
     const weatherList = await weatherStore.getUserWeather(param_city, username);
 
     const viewData = {
-      title: "City",
+      title: "City | Weathertop",
       user: req.user,
       weatherList,
       param_city: param_city,

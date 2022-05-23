@@ -8,7 +8,7 @@ const dashboard = {
     const cityList = await cityStore.getUserCity(username);
 
     const viewData = {
-      title: "Dashboard",
+      title: "Dashboard | Weathertop",
       user: req.user,
       cityList,
     };
