@@ -147,6 +147,25 @@ const weatherStore = {
 
       const dataStoreClient = await dataStore.getDataStore();
 
+      let cond_temp;
+      let cond_wind;
+      let cond_air;
+      if (temperature >= 20) {
+        cond_temp = "up";
+      } else {
+        cond_temp = "down";
+      }
+      if (windSpeed >= 5) {
+        cond_wind = "up";
+      } else {
+        cond_wind = "down";
+      }
+      if (airPressure >= 1000) {
+        cond_air = "up";
+      } else {
+        cond_air = "down";
+      }
+
       if (
         tempList.length > 1 &&
         windList.length > 1 &&
@@ -165,7 +184,7 @@ const weatherStore = {
         let airMax = Math.max(...arrAirPressure);
 
         const query =
-          "UPDATE city_list SET weather=$1, icon=$2, temp=$3, temp_max=$4, temp_min=$5, degree=$6, wind_speed=$7, wind_speed_max=$8, wind_speed_min=$9, air_pressure=$10, air_pressure_max=$11, air_pressure_min=$12 WHERE param_city=$13 AND username=$14";
+          "UPDATE city_list SET weather=$1, icon=$2, temp=$3, temp_max=$4, temp_min=$5, degree=$6, wind_speed=$7, wind_speed_max=$8, wind_speed_min=$9, air_pressure=$10, air_pressure_max=$11, air_pressure_min=$12, cond_temp=$13, cond_wind=$14, cond_air=$15 WHERE param_city=$16 AND username=$17";
         const values = [
           weather,
           icon,
@@ -179,6 +198,9 @@ const weatherStore = {
           airPressure,
           airMax,
           airMin,
+          cond_temp,
+          cond_wind,
+          cond_air,
           param_city,
           username,
         ];
@@ -189,7 +211,7 @@ const weatherStore = {
         }
       } else {
         const query =
-          "UPDATE city_list SET weather=$1, icon=$2, temp=$3, degree=$4, wind_speed=$5, air_pressure=$6 WHERE param_city=$7 AND username=$8";
+          "UPDATE city_list SET weather=$1, icon=$2, temp=$3, degree=$4, wind_speed=$5, air_pressure=$6, cond_temp=$7, cond_wind=$8, cond_air=$9 WHERE param_city=$10 AND username=$11";
         const values = [
           weather,
           icon,
@@ -197,6 +219,9 @@ const weatherStore = {
           deg,
           windSpeed,
           airPressure,
+          cond_temp,
+          cond_wind,
+          cond_air,
           param_city,
           username,
         ];
