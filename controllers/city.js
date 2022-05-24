@@ -12,6 +12,7 @@ const city = {
 
     const viewData = {
       title: "City | Weathertop",
+      header: "City",
       user: req.user,
       weatherList,
       param_city: param_city,
