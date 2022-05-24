@@ -9,6 +9,7 @@ const dashboard = {
 
     const viewData = {
       title: "Dashboard | Weathertop",
+      header: "Dashboard",
       user: req.user,
       cityList,
     };
