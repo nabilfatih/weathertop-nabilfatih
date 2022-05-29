@@ -9,7 +9,6 @@ const expressSanitizer = require("express-sanitizer");
 const flash = require("connect-flash");
 const passport = require("passport");
 const LocalStrategy = require("passport-local");
-const bcrypt = require("bcrypt");
 const bodyParser = require("body-parser");
 
 const ExpressError = require("./utils/ExpressError");
@@ -19,7 +18,6 @@ const homeRoutes = require("./routes/home");
 const dashboardRoutes = require("./routes/dashboard");
 const cityRoutes = require("./routes/city");
 const { isLoggedOut } = require("./middleware");
-const dataStore = require("./models/data-store");
 const users = require("./controllers/users");
 
 const app = express();
@@ -74,7 +72,6 @@ passport.deserializeUser(function (user, done) {
 });
 
 app.use((req, res, next) => {
-  console.log(req.session);
   res.locals.currentUser = req.user;
   res.locals.success = req.flash("success");
   res.locals.error = req.flash("error");
