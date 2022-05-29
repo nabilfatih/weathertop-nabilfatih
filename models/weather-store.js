@@ -1,5 +1,4 @@
 const { uuid } = require("uuidv4");
-const axios = require("axios");
 
 const dataStore = require("./data-store");
 const logger = require("../utils/logger.js");
