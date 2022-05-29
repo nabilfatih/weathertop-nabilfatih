@@ -2,7 +2,6 @@ const logger = require("../utils/logger.js");
 const cityStore = require("../models/city-store");
 const weatherStore = require("../models/weather-store.js");
 const converter = require("../utils/converter.js");
-const axios = require("axios");
 const call = require("../utils/weatherCall.js");
 
 const city = {
