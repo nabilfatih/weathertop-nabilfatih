@@ -26,6 +26,7 @@ const dashboard = {
       const data = await call.weather(city, process.env.WEATHER_API_KEY);
 
       const weatherMain = data.weather.reduce(() => ({}));
+
       const icon = converter.icon(weatherMain.id.toString());
       const deg = converter.compass(data.wind.deg);
       const cond_air = converter.conditionAir(data.main.pressure);
