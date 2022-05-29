@@ -3,6 +3,7 @@ const axios = require("axios");
 
 const dataStore = require("./data-store");
 const logger = require("../utils/logger.js");
+const converter = require("../utils/converter");
 
 const weatherStore = {
   async getUserWeather(param_city, username) {
@@ -114,58 +115,17 @@ const weatherStore = {
     username
   ) {
     try {
-      let weather;
-      if (code.toString() == "800") {
-        weather = "Clear";
-      } else {
-        switch (code.toString().charAt(0)) {
-          case "2":
-            weather = "Thunderstorm";
-            break;
-          case "3":
-            weather = "Drizzle";
-            break;
-          case "5":
-            weather = "Rain";
-            break;
-          case "6":
-            weather = "Snow";
-            break;
-          case "7":
-            weather = "Atmosphere";
-            break;
-          case "8":
-            weather = "Clouds";
-            break;
-          default:
-            weather = "Clear";
-        }
-      }
+      const weather = converter.weather(code.toString());
 
       const tempList = await this.getTemperature(param_city, username);
       const windList = await this.getWindSpeed(param_city, username);
       const airPressureList = await this.getAirPressure(param_city, username);
 
-      const dataStoreClient = await dataStore.getDataStore();
+      const cond_temp = converter.conditionTemp(temperature);
+      const cond_wind = converter.conditionWind(windSpeed);
+      const cond_air = converter.conditionAir(airPressure);
 
-      let cond_temp;
-      let cond_wind;
-      let cond_air;
-      if (temperature >= 20) {
-        cond_temp = "up";
-      } else {
-        cond_temp = "down";
-      }
-      if (windSpeed >= 5) {
-        cond_wind = "up";
-      } else {
-        cond_wind = "down";
-      }
-      if (airPressure >= 1000) {
-        cond_air = "up";
-      } else {
-        cond_air = "down";
-      }
+      const dataStoreClient = await dataStore.getDataStore();
 
       if (
         tempList.length > 1 &&
@@ -241,95 +201,13 @@ const weatherStore = {
   async addWeather(
     param_city,
     username,
-    code,
+    icon,
     temperature,
     windSpeed,
-    windDirection,
-    airPressure
+    deg,
+    airPressure,
+    code
   ) {
-    let icon;
-    if (code == "800") {
-      icon = "clear";
-    } else {
-      switch (code.charAt(0)) {
-        case "2":
-          icon = "thunderstorm";
-          break;
-        case "3":
-          icon = "drizzle";
-          break;
-        case "5":
-          icon = "rain";
-          break;
-        case "6":
-          icon = "snow";
-          break;
-        case "7":
-          icon = "atmosphere";
-          break;
-        case "8":
-          icon = "clouds";
-          break;
-        default:
-          icon = "clear";
-      }
-    }
-
-    let deg;
-    switch (true) {
-      case windDirection >= 348.75 && windDirection <= 360:
-        deg = "North";
-        break;
-      case windDirection >= 0 && windDirection <= 11.25:
-        deg = "North";
-        break;
-      case windDirection >= 11.25 && windDirection <= 33.75:
-        deg = "North North East";
-        break;
-      case windDirection >= 33.75 && windDirection <= 56.25:
-        deg = "North East";
-        break;
-      case windDirection >= 56.25 && windDirection <= 78.75:
-        deg = "East North East";
-        break;
-      case windDirection >= 78.75 && windDirection <= 101.25:
-        deg = "East";
-        break;
-      case windDirection >= 101.25 && windDirection <= 123.75:
-        deg = "East South East";
-        break;
-      case windDirection >= 123.75 && windDirection <= 146.25:
-        deg = "South East";
-        break;
-      case windDirection >= 146.25 && windDirection <= 168.75:
-        deg = "South South East";
-        break;
-      case windDirection >= 168.75 && windDirection <= 191.25:
-        deg = "South";
-        break;
-      case windDirection >= 191.25 && windDirection <= 213.75:
-        deg = "South South West";
-        break;
-      case windDirection >= 213.75 && windDirection <= 236.25:
-        deg = "South West";
-        break;
-      case windDirection >= 236.25 && windDirection <= 258.75:
-        deg = "West South West";
-        break;
-      case windDirection >= 258.75 && windDirection <= 281.25:
-        deg = "West";
-        break;
-      case windDirection >= 281.25 && windDirection <= 303.75:
-        deg = "West North West";
-        break;
-      case windDirection >= 303.75 && windDirection <= 326.25:
-        deg = "North West";
-        break;
-      case windDirection >= 326.25 && windDirection <= 348.75:
-        deg = "North North West";
-        break;
-    }
-
     const dataStoreClient = await dataStore.getDataStore();
 
     try {
@@ -349,120 +227,25 @@ const weatherStore = {
         airPressure,
       ];
       await dataStoreClient.query(query, values);
+
+      await this.updateWeather(
+        code,
+        icon,
+        temperature,
+        deg,
+        windSpeed,
+        airPressure,
+        param_city,
+        username
+      );
     } catch (e) {
       logger.error("Error cannot add weather:", e);
       throw e;
     }
-
-    await this.updateWeather(
-      code,
-      icon,
-      temperature,
-      deg,
-      windSpeed,
-      airPressure,
-      param_city,
-      username
-    );
   },
 
-  async autoAddWeather(param_city, username) {
+  async autoAddWeather(param_city, username, data, weatherMain, icon, deg) {
     try {
-      const config = {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      };
-      const { data } = await axios.get(
-        `https://api.openweathermap.org/data/2.5/weather?q=${param_city}&appid=${process.env.WEATHER_API_KEY}&units=metric`,
-        config
-      );
-
-      const weatherMain = data.weather.reduce(() => ({}));
-
-      let icon;
-      if (weatherMain.id.toString() == "800") {
-        icon = "clear";
-      } else {
-        switch (weatherMain.id.toString().charAt(0)) {
-          case "2":
-            icon = "thunderstorm";
-            break;
-          case "3":
-            icon = "drizzle";
-            break;
-          case "5":
-            icon = "rain";
-            break;
-          case "6":
-            icon = "snow";
-            break;
-          case "7":
-            icon = "atmosphere";
-            break;
-          case "8":
-            icon = "clouds";
-            break;
-          default:
-            icon = "clear";
-        }
-      }
-
-      let deg;
-      switch (true) {
-        case data.wind.deg >= 348.75 && data.wind.deg <= 360:
-          deg = "North";
-          break;
-        case data.wind.deg >= 0 && data.wind.deg <= 11.25:
-          deg = "North";
-          break;
-        case data.wind.deg >= 11.25 && data.wind.deg <= 33.75:
-          deg = "North North East";
-          break;
-        case data.wind.deg >= 33.75 && data.wind.deg <= 56.25:
-          deg = "North East";
-          break;
-        case data.wind.deg >= 56.25 && data.wind.deg <= 78.75:
-          deg = "East North East";
-          break;
-        case data.wind.deg >= 78.75 && data.wind.deg <= 101.25:
-          deg = "East";
-          break;
-        case data.wind.deg >= 101.25 && data.wind.deg <= 123.75:
-          deg = "East South East";
-          break;
-        case data.wind.deg >= 123.75 && data.wind.deg <= 146.25:
-          deg = "South East";
-          break;
-        case data.wind.deg >= 146.25 && data.wind.deg <= 168.75:
-          deg = "South South East";
-          break;
-        case data.wind.deg >= 168.75 && data.wind.deg <= 191.25:
-          deg = "South";
-          break;
-        case data.wind.deg >= 191.25 && data.wind.deg <= 213.75:
-          deg = "South South West";
-          break;
-        case data.wind.deg >= 213.75 && data.wind.deg <= 236.25:
-          deg = "South West";
-          break;
-        case data.wind.deg >= 236.25 && data.wind.deg <= 258.75:
-          deg = "West South West";
-          break;
-        case data.wind.deg >= 258.75 && data.wind.deg <= 281.25:
-          deg = "West";
-          break;
-        case data.wind.deg >= 281.25 && data.wind.deg <= 303.75:
-          deg = "West North West";
-          break;
-        case data.wind.deg >= 303.75 && data.wind.deg <= 326.25:
-          deg = "North West";
-          break;
-        case data.wind.deg >= 326.25 && data.wind.deg <= 348.75:
-          deg = "North North West";
-          break;
-      }
-
       const dataStoreClient = await dataStore.getDataStore();
 
       try {

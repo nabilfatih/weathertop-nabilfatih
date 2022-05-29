@@ -1,6 +1,8 @@
 const logger = require("../utils/logger.js");
 const cityStore = require("../models/city-store");
 const weatherStore = require("../models/weather-store.js");
+const converter = require("../utils/converter.js");
+const axios = require("axios");
 
 const city = {
   async index(req, res) {
@@ -27,7 +29,28 @@ const city = {
     const { param_city } = req.params;
 
     try {
-      await weatherStore.autoAddWeather(param_city, username);
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      };
+      const { data } = await axios.get(
+        `https://api.openweathermap.org/data/2.5/weather?q=${param_city}&appid=${process.env.WEATHER_API_KEY}&units=metric`,
+        config
+      );
+
+      const weatherMain = data.weather.reduce(() => ({}));
+      const icon = converter.icon(weatherMain.id.toString());
+      const deg = converter.compass(data.wind.deg);
+
+      await weatherStore.autoAddWeather(
+        param_city,
+        username,
+        data,
+        weatherMain,
+        icon,
+        deg
+      );
       req.flash("success", "Automatic measurement added!");
       return res.redirect(`/city/${param_city}`);
     } catch (e) {
@@ -54,18 +77,27 @@ const city = {
       return res.redirect(`/city/${param_city}`);
     }
 
-    const result = await weatherStore.addWeather(
-      param_city,
-      username,
-      code,
-      temperature,
-      windSpeed,
-      windDirection,
-      airPressure
-    );
+    const icon = converter.icon(code.toString());
+    const deg = converter.compass(windDirection);
 
-    req.flash("success", "Weather added!");
-    res.redirect(`/city/${param_city}`);
+    try {
+      await weatherStore.addWeather(
+        param_city,
+        username,
+        icon,
+        temperature,
+        windSpeed,
+        deg,
+        airPressure,
+        code
+      );
+
+      req.flash("success", "Weather added!");
+      return res.redirect(`/city/${param_city}`);
+    } catch (e) {
+      req.flash("error", "Weather failed added!");
+      return res.redirect(`/city/${param_city}`);
+    }
   },
 
   async delete(req, res) {
