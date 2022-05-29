@@ -83,8 +83,6 @@ const cityStore = {
       let airPressureMax = null;
       let airPressureMin = null;
 
-      console.log(weatherMain);
-
       try {
         const query =
           "INSERT INTO city_list (id, added, param_city, username, city, latitude, longitude, weather, icon, temp, temp_max, temp_min, wind_speed, degree, wind_speed_max, wind_speed_min, air_pressure, air_pressure_max, air_pressure_min, cond_temp, cond_wind, cond_air) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22)";

@@ -281,7 +281,6 @@ const weatherStore = {
         username
       );
     } catch (e) {
-      console.log(e);
       throw e;
     }
   },
