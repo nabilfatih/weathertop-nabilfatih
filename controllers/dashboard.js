@@ -22,39 +22,39 @@ const dashboard = {
     const username = req.user.username;
     const { city, latitude, longitude } = req.body;
 
-    const data = await call.weather(city, process.env.WEATHER_API_KEY);
+    try {
+      const data = await call.weather(city, process.env.WEATHER_API_KEY);
 
-    const weatherMain = data.weather.reduce(() => ({}));
-    const icon = converter.icon(weatherMain.id.toString());
-    const deg = converter.compass(data.wind.deg);
-    const cond_air = converter.conditionAir(data.main.pressure);
-    const cond_temp = converter.conditionTemp(data.main.temp);
-    const cond_wind = converter.conditionWind(data.wind.speed);
+      const weatherMain = data.weather.reduce(() => ({}));
+      const icon = converter.icon(weatherMain.id.toString());
+      const deg = converter.compass(data.wind.deg);
+      const cond_air = converter.conditionAir(data.main.pressure);
+      const cond_temp = converter.conditionTemp(data.main.temp);
+      const cond_wind = converter.conditionWind(data.wind.speed);
 
-    const result = await cityStore.addCity(
-      username,
-      city.toLowerCase(),
-      data,
-      deg,
-      icon,
-      cond_temp,
-      cond_wind,
-      cond_air,
-      weatherMain
-    );
+      const result = await cityStore.addCity(
+        username,
+        city.toLowerCase(),
+        data,
+        deg,
+        icon,
+        cond_temp,
+        cond_wind,
+        cond_air,
+        weatherMain
+      );
 
-    if (result === null) {
+      if (result?.length) {
+        req.flash("error", "City already added!");
+        return res.redirect("/dashboard");
+      }
+
+      req.flash("success", "City added!");
+      return res.redirect("/dashboard");
+    } catch (e) {
       req.flash("error", "City not found!");
       return res.redirect("/dashboard");
     }
-
-    if (result?.length) {
-      req.flash("error", "City already added!");
-      return res.redirect("/dashboard");
-    }
-
-    req.flash("success", "City added!");
-    return res.redirect("/dashboard");
   },
 
   async delete(req, res) {
