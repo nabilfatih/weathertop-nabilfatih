@@ -60,8 +60,8 @@ const city = {
 
     if (
       code <= 0 ||
-      windDirection <= 0 ||
-      windDirection >= 360 ||
+      windDirection < 0 ||
+      windDirection > 360 ||
       windSpeed <= 0 ||
       airPressure <= 0
     ) {
