@@ -7,7 +7,6 @@ const { isLoggedOut, isLoggedIn } = require("../middleware");
 const users = require("../controllers/users");
 
 router.get("/login", isLoggedOut, catchAsync(users.loginGet));
-
 router.post(
   "/login",
   passport.authenticate("local", {
@@ -17,11 +16,8 @@ router.post(
   }),
   catchAsync(users.loginPost)
 );
-
 router.get("/register", isLoggedOut, catchAsync(users.registerGet));
-
 router.post("/register", catchAsync(users.registerPost));
-
 router.get("/logout", isLoggedIn, catchAsync(users.logout));
 
 module.exports = router;
