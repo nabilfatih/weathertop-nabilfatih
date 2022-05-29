@@ -20,6 +20,7 @@ const dashboardRoutes = require("./routes/dashboard");
 const cityRoutes = require("./routes/city");
 const { isLoggedOut } = require("./middleware");
 const dataStore = require("./models/data-store");
+const users = require("./controllers/users");
 
 const app = express();
 
@@ -61,50 +62,7 @@ passport.use(
   new LocalStrategy(
     { passReqToCallback: true },
     (req, username, password, done) => {
-      loginAttempt();
-      async function loginAttempt() {
-        const client = await dataStore.getDataStore();
-        try {
-          JSON.stringify(
-            await client.query(
-              "SELECT id, name, username, email, password FROM users WHERE username=$1",
-              [username],
-              function (err, result) {
-                if (err) {
-                  req.flash("error", "User not found!");
-                  return done(err);
-                }
-                if (result.rows[0] == null) {
-                  req.flash("error", "User not found!");
-                  return done(null, false);
-                } else {
-                  bcrypt.compare(
-                    password,
-                    result.rows[0].password,
-                    function (err, check) {
-                      if (err) {
-                        req.flash("error", "Wrong password");
-                        return done();
-                      } else if (check) {
-                        return done(null, {
-                          userId: result.rows[0].id,
-                          email: result.rows[0].email,
-                          username: result.rows[0].username,
-                        });
-                      } else {
-                        req.flash("error", "Incorrect login details");
-                        return done(null, false);
-                      }
-                    }
-                  );
-                }
-              }
-            )
-          );
-        } catch (e) {
-          throw e;
-        }
-      }
+      users.login(req, username, password, done);
     }
   )
 );
