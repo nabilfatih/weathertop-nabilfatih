@@ -65,7 +65,7 @@ const city = {
       windSpeed <= 0 ||
       airPressure <= 0
     ) {
-      req.flash("error", "Failed add weather!");
+      req.flash("error", "Failed add the measurement!");
       return res.redirect(`/city/${param_city}`);
     }
 
