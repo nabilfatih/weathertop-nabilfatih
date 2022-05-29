@@ -3,6 +3,7 @@ const cityStore = require("../models/city-store");
 const weatherStore = require("../models/weather-store.js");
 const converter = require("../utils/converter.js");
 const axios = require("axios");
+const call = require("../utils/weatherCall.js");
 
 const city = {
   async index(req, res) {
@@ -29,15 +30,7 @@ const city = {
     const { param_city } = req.params;
 
     try {
-      const config = {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      };
-      const { data } = await axios.get(
-        `https://api.openweathermap.org/data/2.5/weather?q=${param_city}&appid=${process.env.WEATHER_API_KEY}&units=metric`,
-        config
-      );
+      const data = await call.weather(param_city, process.env.WEATHER_API_KEY);
 
       const weatherMain = data.weather.reduce(() => ({}));
       const icon = converter.icon(weatherMain.id.toString());
