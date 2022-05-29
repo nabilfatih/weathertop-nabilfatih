@@ -58,14 +58,12 @@ const city = {
     const { code, temperature, windSpeed, windDirection, airPressure } =
       req.body;
 
-    if (
-      code <= 0 ||
-      windDirection < 0 ||
-      windDirection > 360 ||
-      windSpeed <= 0 ||
-      airPressure <= 0
-    ) {
-      req.flash("error", "Failed add the measurement!");
+    if (windDirection < 0 || windDirection > 360) {
+      req.flash("error", "Please insert between 0 and 360 for wind direction!");
+      return res.redirect(`/city/${param_city}`);
+    }
+    if (code <= 0 || windSpeed <= 0 || airPressure <= 0) {
+      req.flash("error", "Can't insert negative number!");
       return res.redirect(`/city/${param_city}`);
     }
 
