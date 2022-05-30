@@ -10,16 +10,6 @@ const dashboard = {
     const username = req.user.username;
     const cityList = await cityStore.getUserCity(username);
 
-    const dataCoor = cityList.map((city) => {
-      return Object.values({
-        lat: Number(city.latitude),
-        long: Number(city.longitude),
-      });
-    });
-    const dataCity = cityList.map((city) => {
-      return city.city;
-    });
-
     const dataMap = cityList.map((list) => ({
       city: list.city,
       url: `/city/${list.city.toLowerCase()}`,
@@ -27,15 +17,11 @@ const dashboard = {
       longitude: list.longitude,
     }));
 
-    console.log(dataMap);
-
     const viewData = {
       title: "Dashboard | Weathertop",
       header: "Dashboard",
       user: req.user,
       cityList,
-      dataCoor,
-      dataCity,
       dataMap,
     };
 
