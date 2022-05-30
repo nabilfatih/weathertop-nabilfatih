@@ -2,6 +2,7 @@ const logger = require("../utils/logger.js");
 const cityStore = require("../models/city-store");
 const converter = require("../utils/converter.js");
 const call = require("../utils/weatherCall.js");
+const city = require("./city.js");
 
 const dashboard = {
   async index(req, res) {
@@ -9,12 +10,35 @@ const dashboard = {
     const username = req.user.username;
     const cityList = await cityStore.getUserCity(username);
 
+    const dataCoor = cityList.map((city) => {
+      return Object.values({
+        lat: Number(city.latitude),
+        long: Number(city.longitude),
+      });
+    });
+    const dataCity = cityList.map((city) => {
+      return city.city;
+    });
+
+    const dataMap = cityList.map((list) => ({
+      city: list.city,
+      url: `/city/${list.city.toLowerCase()}`,
+      latitude: list.latitude,
+      longitude: list.longitude,
+    }));
+
+    console.log(dataMap);
+
     const viewData = {
       title: "Dashboard | Weathertop",
       header: "Dashboard",
       user: req.user,
       cityList,
+      dataCoor,
+      dataCity,
+      dataMap,
     };
+
     res.render("dashboard", viewData);
   },
 

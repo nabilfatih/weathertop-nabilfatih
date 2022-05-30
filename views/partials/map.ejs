@@ -1,0 +1,35 @@
+<style>
+    #map {
+        display: grid;
+        justify-content: center;
+        width: 100%;
+        height: 480px;
+        margin-bottom: 5rem;
+    }
+</style>
+
+<div id="map"></div>
+
+<div id="dataMap" data-map=<%=JSON.stringify(dataMap) %>></div>
+
+<script>
+    var dataMap = document.getElementById('dataMap').dataset.map
+
+    const mapList = JSON.parse(dataMap)
+
+    var map = L.map('map', {
+        center: [51, 12],
+        zoom: 5,
+    });
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '© OpenStreetMap'
+    }).addTo(map);
+
+    for (var i = 0; i < mapList.length; ++i) {
+        L.marker([mapList[i].latitude, mapList[i].longitude])
+            .bindPopup('<a href="' + mapList[i].url + '" target="_blank" rel="noopener">' + mapList[i].city + '</a>')
+            .addTo(map);
+    }
+</script>
