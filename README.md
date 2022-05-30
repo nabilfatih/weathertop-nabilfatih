@@ -12,6 +12,7 @@
 - Bootstrap : `Front End (Styling)`
 - PostgreSQL : `Database`
 - OpenWeather : `API for getting the weather data`
+- Leaflet : `API for showing the map`
 
 ## Installation
 
