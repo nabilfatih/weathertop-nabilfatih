@@ -29,7 +29,7 @@
 
     for (var i = 0; i < mapList.length; ++i) {
         L.marker([mapList[i].latitude, mapList[i].longitude])
-            .bindPopup('<a href="' + mapList[i].url + '" target="_blank" rel="noopener">' + mapList[i].city + '</a>')
+            .bindPopup(`<a href="${mapList[i].url}" target="_blank" rel="noopener">${mapList[i].city}</a>`)
             .addTo(map);
     }
 </script>
