@@ -12,13 +12,13 @@ const LocalStrategy = require("passport-local");
 const bodyParser = require("body-parser");
 
 const ExpressError = require("./utils/ExpressError");
+const { isLoggedOut } = require("./middleware");
+const users = require("./controllers/users");
 
 const userRoutes = require("./routes/users");
 const homeRoutes = require("./routes/home");
 const dashboardRoutes = require("./routes/dashboard");
 const cityRoutes = require("./routes/city");
-const { isLoggedOut } = require("./middleware");
-const users = require("./controllers/users");
 
 const app = express();
 
